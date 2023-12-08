@@ -10,60 +10,64 @@ fn read_lines(filename: &str) -> Vec<String> {
 }
 
 fn main() {
-    let lines: Vec<String> = read_lines("input/day1/input.txt");
-    let result: i32 = lines.iter().map(|row| part2(row)).sum();
+    let lines = read_lines("input/day1/input.txt");
+    let result: i32 = lines
+        .iter()
+        .map(|row| part2(row))
+        .sum();
 
     println!("{}", result)
 }
 
 fn part1(row: &str) -> i32 {
-    let row_chars: Vec<char> = row.chars().collect::<Vec<char>>();
+    let row_chars: Vec<char> = row.chars().collect();
 
     let first_digit = row_chars
         .iter()
         .find(|c| c.is_ascii_digit())
-        .unwrap_or_else(|| &'0');
+        .unwrap_or(&'0');
 
     let last_digit = row_chars
         .iter()
         .rfind(|c| c.is_ascii_digit())
-        .unwrap_or_else(|| &'0');
+        .unwrap_or(&'0');
 
     format!("{first_digit}{last_digit}")
         .parse()
-        .unwrap_or_else(|_| 0)
+        .unwrap_or(0)
 }
 
 fn part2(row: &str) -> i32 {
-    let mut conversion_table = HashMap::new();
-    conversion_table.insert(String::from("1"), 1);
-    conversion_table.insert(String::from("2"), 2);
-    conversion_table.insert(String::from("3"), 3);
-    conversion_table.insert(String::from("4"), 4);
-    conversion_table.insert(String::from("5"), 5);
-    conversion_table.insert(String::from("6"), 6);
-    conversion_table.insert(String::from("7"), 7);
-    conversion_table.insert(String::from("8"), 8);
-    conversion_table.insert(String::from("9"), 9);
-    conversion_table.insert(String::from("one"), 1);
-    conversion_table.insert(String::from("two"), 2);
-    conversion_table.insert(String::from("three"), 3);
-    conversion_table.insert(String::from("four"), 4);
-    conversion_table.insert(String::from("five"), 5);
-    conversion_table.insert(String::from("six"), 6);
-    conversion_table.insert(String::from("seven"), 7);
-    conversion_table.insert(String::from("eight"), 8);
-    conversion_table.insert(String::from("nine"), 9);
+    let conversion_table = HashMap::from([
+        ("1", 1),
+        ("2", 2),
+        ("3", 3),
+        ("4", 4),
+        ("5", 5),
+        ("6", 6),
+        ("7", 7),
+        ("8", 8),
+        ("9", 9),
+        ("one", 1),
+        ("two", 2),
+        ("three", 3),
+        ("four", 4),
+        ("five", 5),
+        ("six", 6),
+        ("seven", 7),
+        ("eight", 8),
+        ("nine", 9),
+    ]);
 
-    let first_substring_pos = conversion_table
+    let first_substring_pos: Vec<_> = conversion_table
         .keys()
-        .flat_map(|substr| row.find(substr).map(|i| (i, substr.clone())))
-        .collect::<Vec<(usize, String)>>();
+        .flat_map(|&substr| row.find(substr).map(|i| (i, substr)))
+        .collect();
 
-    let last_substring_pos = conversion_table
+    let last_substring_pos: Vec<_> = conversion_table
         .keys()
-        .flat_map(|substr| row.rfind(substr).map(|i| (i, substr.clone())))
-        .collect::<Vec<(usize, String)>>();
+        .flat_map(|&substr| row.rfind(substr).map(|i| (i, substr)))
+        .collect();
 
     let all_pos = [first_substring_pos, last_substring_pos].concat();
 
@@ -75,5 +79,5 @@ fn part2(row: &str) -> i32 {
 
     format!("{first_digit}{last_digit}")
         .parse()
-        .unwrap_or_else(|_| 0)
+        .unwrap_or(0)
 }
